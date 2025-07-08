@@ -106,6 +106,10 @@ function analiz(input) {
 
     return maxindex(b)
 }
-
-//console.log(analiz("But on the edge of town, drills were driven out of his mind by something else."))
-//fs.writeFileSync("output2.txt", decode(fs.readFileSync("output.txt", "utf8"), 6));
+a = "But on the edge of town, drills were driven out of his mind by something else."
+console.log(a)
+console.log(analiz(a))
+b = encode(a, 12)
+console.log(b)
+console.log(analiz(b))
+console.log(decode(b, analiz(b)))

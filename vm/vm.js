@@ -1,17 +1,19 @@
 let fs = require('fs');
 const fileContent = fs.readFileSync('alg.txt', 'utf8');
-let commands = { input: 0, out: 1, write: 2, goto: 3, assign: 4, assignn: 5, sum: 6, sumn: 7, sub: 8, subn: 9, div: 10, divn: 11, rem: 12, remn: 13, mult: 14, multn: 15, abs: 16, if: 17, ifn: 18, metka: 19, el: 20, exit: 21 };
+let commands = { input: 0, out: 1, write: 2, goto: 3, assign: 4, assignn: 5, sum: 6, sumn: 7, sub: 8, subn: 9, div: 10, divn: 11, rem: 12, remn: 13, mult: 14, multn: 15, abs: 16, if: 17, ifn: 18, metka: 19, el: 20, exit: 21 }; // описываем команды
 let input = [];
 input = fileContent.split(/ |\n/);
-let mem = [0, 0, 0, 0, 0];
-
+let mem = [0, 0, 0, 0, 0]; // резервируем ячейки памяти для хранения
+let mem_length = mem.length
+// форматируем alg.txt и расставляем метки
 for (let i = 0; i < input.length; i++) {
     input[i] = input[i].replace(/\r|\s/, "");
     if (input[i] == "metka") {
         input[i + 1] = input[i + 1].replace(/\r|\s/, "");
-        mem[input[i + 1]] = i + 5;
+        mem[input[i + 1]] = i + mem_length;
     }
 }
+// записываем комманды в память
 for (let i = 0; i < input.length; i++) {
     if ((input[i] in commands) && (input[i] != "metka") && (input[i] != "write") && (input[i] != "goto")) {
         mem.push(commands[input[i]]);
@@ -45,17 +47,18 @@ for (let i = 0; i < input.length; i++) {
     }
 }
 
-let ip = 5;
+let ip = mem_length;
 let j = 0;
 
-
+//выполняем комманды из памяти
 while (ip < mem.length) {
+    let result;
     switch (mem[ip]) {
-        case 0: 
+        case 0:
             mem[mem[ip + 1]] = Number(process.argv[j + 2]);
             j++;
             ip += 2;
-            break;          
+            break;
         case 1:
             console.log(mem[mem[ip + 1]]);
             ip += 2;
@@ -120,9 +123,8 @@ while (ip < mem.length) {
             ip += 3;
             break;
         case 17:
-            let result;
             if (mem[ip + 2] == '>') result = (mem[mem[ip + 1]] > mem[mem[ip + 3]]);
-            if (mem[ip + 2] == '==')  result = (mem[mem[ip + 1]] == mem[mem[ip + 3]]);
+            if (mem[ip + 2] == '==') result = (mem[mem[ip + 1]] == mem[mem[ip + 3]]);
             if (mem[ip + 2] == '<') result = (mem[mem[ip + 1]] > mem[mem[ip + 3]]);
             if (result == false) ip += 4;
             else ip += 6;
@@ -130,7 +132,7 @@ while (ip < mem.length) {
         case 18:
             if (mem[ip + 2] == '>') result = (mem[mem[ip + 1]] > mem[ip + 3]);
             if (mem[ip + 2] == '==') result = (mem[mem[ip + 1]] == mem[ip + 3]);
-            if (mem[ip + 2] == '<')  result = (mem[mem[ip + 1]] > mem[ip + 3]);
+            if (mem[ip + 2] == '<') result = (mem[mem[ip + 1]] > mem[ip + 3]);
             if (result == false) ip += 4;
             else ip += 6;
             break;
